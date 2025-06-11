@@ -1,0 +1,574 @@
+[
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-04-13",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-216",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-04-16"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-03-30",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-197",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-04-16"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-04-16",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-217",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-04-24"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-04-28",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-231",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-04-28"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-04-29",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-232",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-05-07"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-04-26",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-229",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-05-08"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-05-03",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-234",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-05-09"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-04-11",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-215",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-05-09"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-04-05",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-209",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-05-15"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-05-16",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-263",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-05-24"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-05-30",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-273",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-05-30"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-06-04",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-286",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-06-05"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-06-04",
+        "fixedVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "key": "BOOKKEEPER-285",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-06-05"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-05-31",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-280",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-06-29"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 2,
+                "name": "4.1.0",
+                "releaseDate": "2012-06-13"
+            }
+        ],
+        "creationDate": "2012-06-13",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-294",
+        "openingVersion": {
+            "id": 2,
+            "name": "4.1.0",
+            "releaseDate": "2012-06-13"
+        },
+        "resolutionDate": "2012-07-05"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-07-26",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-352",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-07-27"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-08-07",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-354",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-08-21"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-09-13",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-403",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-09-14"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-09-10",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-397",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-09-26"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-10-09",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-427",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-10-23"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-10-24",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-441",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-10-26"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-07-23",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-351",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-12-03"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-11-14",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-465",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-12-10"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-10-30",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-447",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2012-12-24"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 4,
+                "name": "4.2.0",
+                "releaseDate": "2013-01-19"
+            }
+        ],
+        "creationDate": "2012-12-21",
+        "fixedVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "key": "BOOKKEEPER-524",
+        "openingVersion": {
+            "id": 3,
+            "name": "4.1.1",
+            "releaseDate": "2013-01-16"
+        },
+        "resolutionDate": "2013-01-07"
+    },
+    {
+        "affectedVersions": [
+            {
+                "id": 7,
+                "name": "4.3.0",
+                "releaseDate": "2014-02-02"
+            }
+        ],
+        "creationDate": "2013-10-16",
+        "fixedVersion": {
+            "id": 10,
+            "name": "4.3.2",
+            "releaseDate": "2015-11-17"
+        },
+        "key": "BOOKKEEPER-695",
+        "openingVersion": {
+            "id": 7,
+            "name": "4.3.0",
+            "releaseDate": "2014-02-02"
+        },
+        "resolutionDate": "2015-09-25"
+    }
+]
