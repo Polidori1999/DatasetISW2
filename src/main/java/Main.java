@@ -17,6 +17,7 @@ public class Main {
     public static void main(String[] args) {
         // 1) Configuro JSON-B con l’adapter per Instant e abilito pretty-print
         JsonbConfig config = new JsonbConfig()
+
                 .withFormatting(true)
                 .withAdapters(new InstantAdapter());
         Jsonb jsonb = JsonbBuilder.create(config);
