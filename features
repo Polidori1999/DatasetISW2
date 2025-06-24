@@ -1,0 +1,12 @@
+| #  | Feature               | Descrizione                                                                                    | Categoria             | Actionable? |
+| -- | --------------------- | ---------------------------------------------------------------------------------------------- | --------------------- | ----------- |
+| 1  | Lines of Code (LOC)   | Numero di linee di codice (escluse commenti e blank)                                           | Statiche              | no          |
+| 2  | Cyclomatic Complexity | Numero di percorsi indipendenti (McCabe)                                                       | Statiche              | no          |
+| 3  | Cognitive Complexity  | Misura dello sforzo mentale richiesto per comprendere il metodo                                | Statiche              | no          |
+| 4  | Halstead Volume       | Volume logico calcolato su operatori e operandi                                                | Statiche              | no          |
+| 5  | Nesting Depth         | Profondità massima di blocchi annidati (if, loop, ecc.)                                        | Statiche              | no          |
+| 6  | Code Smells Count     | Conteggio di code-smells (es. “Long Method”, “God Class”) rilevati da tool statici             | Statiche              | no          |
+| 7  | methodHistories       | Numero di volte che il metodo è stato modificato                                               | Evolutive (Changes×2) | no          |
+| 8  | Churn                 | Somma di linee aggiunte + rimosse su tutte le revisioni del metodo                             | Evolutive (Changes×2) | no          |
+| 9  | Authors               | Numero di autori distinti che hanno cambiato il metodo                                         | Evolutive (Changes×2) | no          |
+| 10 | Method > X LOC        | Flag booleano: `1` se LOC > soglia (es. 100), altrimenti `0` – identifica metodi troppo lunghi | Actionable            | sì          |

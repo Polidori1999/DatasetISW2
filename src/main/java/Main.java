@@ -1,84 +1,47 @@
-import fetcher.JiraInjection;
-import fetcher.model.JiraVersion;
+import fetcher.BookkeeperFetcher;
 import fetcher.model.JiraTicket;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.bind.JsonbConfig;
-import utils.InstantAdapter;
-import utils.LocalDateAdapter;
 
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.Comparator;
+import java.io.File;
 import java.util.List;
-import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) {
-        // Configuro JSON-B con pretty-print e adapter per Instant/LocalDate
-        JsonbConfig cfg = new JsonbConfig()
-                .withFormatting(true)
-                .withAdapters(new InstantAdapter(), new LocalDateAdapter());
-        Jsonb jsonb = JsonbBuilder.create(cfg);
 
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static void main(String[] args) throws Exception {
+        System.out.println("Avvio del processo di esportazione di tutti i ticket JIRA del progetto BOOKKEEPER");
 
-        try {
-            // --- 1) Carico tutte le JIRA-release ---
-            JiraInjection ji = new JiraInjection("BOOKKEEPER", jsonb);
-            ji.injectReleases();
-            List<JiraVersion> allJv = ji.getReleases();
+        // Nome del file di output
+        String outputFileName = "bookkeeper_jira_tickets.json";
+        File outputFile = new File(outputFileName);
 
-            Collections.sort(allJv, Comparator.comparing(JiraVersion::getReleaseDate));
-            System.out.println("=== Tutte le JIRA Releases disponibili ===");
-            allJv.forEach(v ->
-                    System.out.println("  • " + v.getName() + " @ " + v.getReleaseDate().format(fmt))
-            );
-            System.out.printf("Caricate %d JIRA release totali%n%n", allJv.size());
-
-            // --- 2) Seleziono il 34% più vecchio e salvo in releases.json ---
-            int cutoff = (int) Math.ceil(allJv.size() * 0.34);
-            List<JiraVersion> oldest34 = allJv.subList(0, cutoff);
-
-            System.out.println("=== JIRA Releases selezionate (34% più vecchie) ===");
-            oldest34.forEach(v ->
-                    System.out.println("  • " + v.getName() + " @ " + v.getReleaseDate().format(fmt))
-            );
-            System.out.printf("Selezionate %d release%n%n", oldest34.size());
-
-            try (FileWriter fw = new FileWriter("releases.json")) {
-                jsonb.toJson(oldest34, fw);
-            }
-            System.out.println("File releases.json scritto.\n");
-
-            // --- 3) Recupero TUTTI i Bug Fixed/Closed/Resolved (tutte le release) ---
-            System.out.println("Recupero tutti i ticket Bug risolti...");
-            List<JiraTicket> bugs = ji.fetchFixedBugs();
-            System.out.printf("Trovati %d ticket%n%n", bugs.size());
-
-            // --- 4) Salvo in jira_bugs_fixed.json ---
-            try (PrintWriter pw = new PrintWriter("jira_bugs_fixed.json")) {
-                pw.println("[");
-                for (int i = 0; i < bugs.size(); i++) {
-                    String obj = jsonb.toJson(bugs.get(i));
-                    String indented = Arrays.stream(obj.split("\n"))
-                            .map(line -> "  " + line)
-                            .reduce((a, b) -> a + "\n" + b)
-                            .orElse(obj);
-                    pw.println(indented);
-                    if (i < bugs.size() - 1) {
-                        pw.println(",");
-                        pw.println();
-                    }
-                }
-                pw.println("]");
-            }
-            System.out.println("File jira_bugs_fixed.json scritto.");
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Controllo se il file esiste già
+        if (outputFile.exists()) {
+            System.out.println("✓ Il file " + outputFileName + " esiste già. Nessuna azione eseguita.");
+            return;
         }
+
+        // 0. Credenziali JIRA (se necessario)
+        String jiraUser = System.getenv("JIRA_USER");
+        String jiraPass = System.getenv("JIRA_PASS");
+        System.out.printf("Credenziali JIRA presenti: user=%b pass=%b%n",
+                jiraUser != null, jiraPass != null);
+
+        // 1. Inizializza il fetcher
+        BookkeeperFetcher fetcher = new BookkeeperFetcher();
+
+        // 2. Recupera tutti i ticket JIRA del progetto, cronometrando il download
+        System.out.println("Fase 1: recupero di tutti i ticket JIRA...");
+        long start = System.nanoTime();
+        List<JiraTicket> tickets = fetcher.fetchAllJiraTickets(jiraUser, jiraPass);
+        long elapsedNs = System.nanoTime() - start;
+        double elapsedSec = elapsedNs / 1_000_000_000.0;
+        System.out.printf("✔ Download completato: scaricati %d ticket in %.2f secondi%n",
+                tickets.size(), elapsedSec);
+
+        // 3. Scrittura su file JSON
+        System.out.printf("Fase 2: scrittura dei ticket su %s...%n", outputFileName);
+        fetcher.writeTicketsToJsonFile(tickets, outputFileName);
+        System.out.println("✓ File JSON scritto correttamente: " + outputFileName);
+
+        System.out.println("✓ Esportazione completata. File disponibile: " + outputFileName);
     }
 }

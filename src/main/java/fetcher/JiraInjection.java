@@ -1,3 +1,5 @@
+/*
+// src/main/java/fetcher/JiraInjection.java
 package fetcher;
 
 import fetcher.model.JiraTicket;
@@ -14,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Gestisce il fetch da JIRA.
- */
 public class JiraInjection {
     private static final String VERSIONS_API =
             "https://issues.apache.org/jira/rest/api/latest/project/%s";
@@ -33,12 +32,12 @@ public class JiraInjection {
         this.jsonb   = jsonb;
     }
 
-    /** Carica le release per poter mappare date→release (opzionale) */
+
     public void injectReleases() throws IOException {
         String url = String.format(VERSIONS_API, projKey);
         Request req = new Request.Builder()
                 .url(url)
-                .header("Accept","application/json")
+                .header("Accept", "application/json")
                 .build();
 
         try (Response resp = client.newCall(req).execute()) {
@@ -47,16 +46,12 @@ public class JiraInjection {
             releases = vr.versions;
             releases.sort(Comparator.comparing(JiraVersion::getReleaseDate));
             for (int i = 0; i < releases.size(); i++) {
-                releases.get(i).setId(i+1);
+                releases.get(i).setId(i + 1);
             }
         }
     }
 
-    /**
-     * Fetcha tutti i ticket Bug con
-     * status = Closed OR Resolved
-     * resolution = Fixed
-     */
+
     public List<JiraTicket> fetchFixedBugs() throws IOException {
         String jql = String.format(
                 "project=\"%s\" AND issuetype=Bug " +
@@ -89,11 +84,64 @@ public class JiraInjection {
                 for (SearchIssue issue : sr.issues) {
                     LocalDate created  = issue.fields.created;
                     LocalDate resolved = issue.fields.resolutionDate;
-                    // map opening/fixed version if serve
                     JiraVersion opening = getReleaseAfterOrEqualDate(created);
                     JiraVersion fixed   = getReleaseAfterOrEqualDate(resolved);
 
-                    // build ticket
+                    JiraTicket t = new JiraTicket(
+                            issue.key,
+                            created,
+                            resolved,
+                            opening,
+                            fixed,
+                            issue.fields.versions
+                    );
+                    result.add(t);
+                }
+                startAt += sr.issues.size();
+            }
+        } while (startAt < total);
+
+        result.sort(Comparator.comparing(JiraTicket::getResolutionDate));
+        return result;
+    }
+
+
+    public List<JiraTicket> fetchFixedBugsForFixVersion(String version) throws IOException {
+        String jql = String.format(
+                "project=\"%s\" AND issuetype=Bug " +
+                        "AND (status=Closed OR status=Resolved) " +
+                        "AND resolution=Fixed " +
+                        "AND fixVersion=\"%s\"",
+                projKey, version
+        );
+
+        List<JiraTicket> result = new ArrayList<>();
+        int startAt = 0, total;
+
+        do {
+            HttpUrl url = HttpUrl.parse(SEARCH_API).newBuilder()
+                    .addQueryParameter("jql",        jql)
+                    .addQueryParameter("fields",     "key,versions,created,resolutiondate,status")
+                    .addQueryParameter("startAt",    String.valueOf(startAt))
+                    .addQueryParameter("maxResults", "1000")
+                    .build();
+
+            Request req = new Request.Builder()
+                    .url(url)
+                    .header("Accept","application/json")
+                    .build();
+
+            try (Response resp = client.newCall(req).execute()) {
+                String body = resp.body().string();
+                SearchResponse sr = jsonb.fromJson(body, SearchResponse.class);
+                total = sr.total;
+
+                for (SearchIssue issue : sr.issues) {
+                    LocalDate created  = issue.fields.created;
+                    LocalDate resolved = issue.fields.resolutionDate;
+                    JiraVersion opening = getReleaseAfterOrEqualDate(created);
+                    JiraVersion fixed   = getReleaseAfterOrEqualDate(resolved);
+
                     JiraTicket t = new JiraTicket(
                             issue.key,
                             created,
@@ -120,29 +168,27 @@ public class JiraInjection {
                 .orElse(null);
     }
 
-    // getter (opzionale)
-    public List<JiraVersion> getReleases() { return releases; }
+    public List<JiraVersion> getReleases() {
+        return releases;
+    }
 
-    // --- binding classes ---
+    // --- classi di binding JSON-B ---
     public static class VersionsResponse {
         public List<JiraVersion> versions;
-        public VersionsResponse() {}
     }
     public static class SearchResponse {
         public int total;
         public List<SearchIssue> issues;
-        public SearchResponse() {}
     }
     public static class SearchIssue {
         public String key;
         public Fields fields;
-        public SearchIssue() {}
     }
     public static class Fields {
         public List<JiraVersion> versions;
         public LocalDate created;
         @jakarta.json.bind.annotation.JsonbProperty("resolutiondate")
         public LocalDate resolutionDate;
-        public Fields() {}
     }
 }
+*/
