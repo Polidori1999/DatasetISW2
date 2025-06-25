@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,15 @@ public class BookkeeperFetcher {
         this.jsonb = JsonbBuilder.create(
                 new JsonbConfig().withFormatting(true)
         );
+    }
+
+    // Dentro BookkeeperFetcher
+
+    public List<JiraTicket> readTicketsFromFile(String filePath) throws IOException {
+        String json = Files.readString(Paths.get(filePath));
+        // più semplice: array → List
+        JiraTicket[] arr = jsonb.fromJson(json, JiraTicket[].class);
+        return Arrays.asList(arr);
     }
 
     public List<JiraTicket> fetchAllJiraTickets(String user, String pwd) throws IOException {
