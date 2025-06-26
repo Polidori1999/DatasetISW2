@@ -1,6 +1,4 @@
 // src/main/java/your/package/Main.java
-
-
 import fetcher.BookkeeperFetcher;
 import fetcher.model.JiraTicket;
 import fetcher.model.JiraVersion;
@@ -26,8 +24,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -47,9 +44,9 @@ public class Main {
 
             // 1) Jira tickets + project versions
             BookkeeperFetcher fetcher = new BookkeeperFetcher();
-            List<JiraTicket> tickets     = loadOrFetchTickets(fetcher);
-            List<JiraVersion> jiraVers   = fetcher.fetchProjectVersions();
-            System.out.println(" → Versioni JIRA: " +
+            List<JiraTicket> tickets   = loadOrFetchTickets(fetcher);
+            List<JiraVersion> jiraVers = fetcher.fetchProjectVersions();
+            System.out.println(" → Versioni JIRA disponibili: " +
                     jiraVers.stream().map(JiraVersion::getName).collect(Collectors.joining(" "))
             );
 
@@ -57,7 +54,7 @@ public class Main {
             File repoDir = new File(args.length>0 ? args[0] : DEFAULT_REPO_DIR);
             Git git = repoDir.exists() ? open(repoDir) : cloneRepo(repoDir);
 
-            // 3) Prendi i tag direttamente da GitHub
+            // 3) Prendi le tag direttamente da GitHub
             List<String> gitTags = fetchGitHubTags(OWNER, REPO);
             System.out.println(" → Tag remoti trovati su GitHub: " + gitTags.size());
 
@@ -74,7 +71,7 @@ public class Main {
                 System.out.println("⚠️ Nessun tag Git∩JIRA trovato: userò HEAD");
                 validTags = List.of("HEAD");
             }
-            System.out.println(" → Tag validi: " + validTags);
+            System.out.println(" → Tag validi (tutte): " + validTags);
 
             // 5) Filtra i commit bug-fix
             Pattern issueRe = buildBugIssuePattern(tickets);
@@ -84,36 +81,51 @@ public class Main {
                     bugFixes.add(c);
                 }
             }
-            System.out.println(" → Commit bug-fix: " + bugFixes.size());
+            System.out.println(" → Commit bug-fix trovati: " + bugFixes.size());
 
-            // 6) Per ogni tag scarica lo zip, estraine il sorgente, estrai le feature
-            FeatureExtractor fx = new FeatureExtractor(
-                    repoDir.toPath()
-            );
+            // 6) Per ogni tag scarica lo zip, estrai sorgente, estrai feature
+            FeatureExtractor fx = new FeatureExtractor(repoDir.toPath());
             Map<String, Map<String,FeatureExtractor.MethodFeatures>> allFeat = new LinkedHashMap<>();
 
             for (String tag : validTags) {
                 System.out.println(" → Elaboro release " + tag);
                 if ("HEAD".equals(tag)) {
-                    // estrai da working‐dir
                     allFeat.put(tag, walkAndExtract(repoDir, fx));
                 } else {
-                    Path tmp = downloadAndUnzip(OWNER, REPO, tag);
-                    Path projectDir = findSingleSubdir(tmp);
-                    allFeat.put(tag, walkAndExtract(projectDir.toFile(), fx));
+                    Path tmp      = downloadAndUnzip(OWNER, REPO, tag);
+                    Path projDir  = findSingleSubdir(tmp);
+                    allFeat.put(tag, walkAndExtract(projDir.toFile(), fx));
                     deleteDirectoryRecursively(tmp);
                 }
                 System.out.println("   ✓ " + tag + " → " + allFeat.get(tag).size() + " metodi");
             }
 
-            // 7) Identifica metodi buggy e genera CSV
-            Set<String> buggy = new BuggyMethodExtractor(git.getRepository())
-                    .extractChangedMethods(bugFixes)
-                    .values().stream().flatMap(Collection::stream)
-                    .collect(Collectors.toSet());
-            System.out.println(" → Metodi buggy totali: " + buggy.size());
+            // 7) Identifica i metodi buggy e stampa statistiche
+            BuggyMethodExtractor extractor = new BuggyMethodExtractor(git.getRepository());
+            Map<RevCommit, List<String>> buggyMap = extractor.extractChangedMethods(bugFixes);
+            System.out.println(" → Commits con diff estraibili: " + buggyMap.size());
+            int totalChanged = buggyMap.values().stream().mapToInt(List::size).sum();
+            System.out.println(" → Totale modifiche di metodo (con duplicati): " + totalChanged);
+            Set<String> buggyMethods = buggyMap.values().stream()
+                    .flatMap(Collection::stream).collect(Collectors.toSet());
+            System.out.println(" → Metodi unici identificati come buggy: " + buggyMethods.size());
 
-            new CsvGenerator().generateCsv(allFeat, buggy, "bookkeeper_dataset.csv");
+            // --- qui APPLICHIAMO la regola del 33% SOLO ORA ----------------
+
+            int keepCount = (int)Math.floor(validTags.size() * 0.33);
+// assicuriamo almeno 1:
+            keepCount = Math.max(1, keepCount);
+            List<String> keptTags = validTags.subList(0, keepCount);
+            System.out.println(" → Release mantenute (33% più vecchie): " + keptTags);
+
+            // filtro tutte le feature per tener solo quelle delle release scelte
+            Map<String, Map<String,FeatureExtractor.MethodFeatures>> filteredFeat = new LinkedHashMap<>();
+            for (String t : keptTags) {
+                filteredFeat.put(t, allFeat.get(t));
+            }
+
+            // 8) Genera CSV usando solo le release filtrate
+            new CsvGenerator().generateCsv(filteredFeat, buggyMethods, "bookkeeper_dataset.csv");
             System.out.println("✓ CSV creato: bookkeeper_dataset.csv");
 
             git.close();
@@ -158,12 +170,11 @@ public class Main {
         Request req = new Request.Builder().url(url).build();
         try (Response resp = client.newCall(req).execute()) {
             if (!resp.isSuccessful())
-                throw new IOException("GitHub tags request failed: " + resp);
+                throw new IOException("Richiesta tag GitHub fallita: " + resp);
             JsonArray arr = gson.fromJson(resp.body().charStream(), JsonArray.class);
             List<String> tags = new ArrayList<>();
             for (JsonElement el : arr) {
-                String name = el.getAsJsonObject().get("name").getAsString();
-                tags.add(name);
+                tags.add(el.getAsJsonObject().get("name").getAsString());
             }
             return tags;
         }
@@ -196,11 +207,10 @@ public class Main {
         return tmpDir;
     }
 
-    // Se lo zip estrae una singola cartella root, la individua
     private static Path findSingleSubdir(Path dir) throws IOException {
         try (Stream<Path> s = Files.list(dir)) {
             List<Path> subs = s.filter(Files::isDirectory).collect(Collectors.toList());
-            return (subs.size()==1 ? subs.get(0) : dir);
+            return subs.size()==1 ? subs.get(0) : dir;
         }
     }
 
@@ -212,20 +222,20 @@ public class Main {
         }
     }
 
-    // ————— Utilità comune —————
+    // ————— Utility comuni —————
 
     private static Pattern buildBugIssuePattern(List<JiraTicket> tks) {
         String orKeys = tks.stream()
                 .filter(t->"Bug".equalsIgnoreCase(t.getIssueType()))
-                .filter(t->{String s=t.getStatus(); return "Closed".equalsIgnoreCase(s)||"Resolved".equalsIgnoreCase(s);})
+                .filter(t->{ String s=t.getStatus(); return "Closed".equalsIgnoreCase(s)||"Resolved".equalsIgnoreCase(s); })
                 .filter(t->"Fixed".equalsIgnoreCase(t.getResolution()))
                 .map(JiraTicket::getKey).map(Pattern::quote)
                 .collect(Collectors.joining("|"));
         return Pattern.compile(orKeys, Pattern.CASE_INSENSITIVE);
     }
 
-    private static Map<String,FeatureExtractor.MethodFeatures> walkAndExtract(File dir, FeatureExtractor fx) throws IOException {
-        Map<String,FeatureExtractor.MethodFeatures> m = new HashMap<>();
+    private static Map<String, FeatureExtractor.MethodFeatures> walkAndExtract(File dir, FeatureExtractor fx) throws IOException {
+        Map<String, FeatureExtractor.MethodFeatures> m = new HashMap<>();
         try (Stream<Path> ps = Files.walk(dir.toPath())) {
             ps.filter(p->p.toString().endsWith(".java") && p.toString().contains("/src/main/java/"))
                     .forEach(p->{
@@ -237,13 +247,13 @@ public class Main {
     }
 
     private static int compareVersion(String a, String b) {
-        String[] pa=a.replaceFirst("^(?:v|release-)","").split("\\.");
-        String[] pb=b.replaceFirst("^(?:v|release-)","").split("\\.");
-        int n=Math.max(pa.length,pb.length);
-        for(int i=0;i<n;i++){
-            int va=i<pa.length?Integer.parseInt(pa[i]):0;
-            int vb=i<pb.length?Integer.parseInt(pb[i]):0;
-            if(va!=vb) return Integer.compare(va,vb);
+        String[] pa = a.replaceFirst("^(?:v|release-)","").split("\\.");
+        String[] pb = b.replaceFirst("^(?:v|release-)","").split("\\.");
+        int n = Math.max(pa.length, pb.length);
+        for (int i=0; i<n; i++) {
+            int va = i<pa.length ? Integer.parseInt(pa[i]) : 0;
+            int vb = i<pb.length ? Integer.parseInt(pb[i]) : 0;
+            if (va!=vb) return Integer.compare(va, vb);
         }
         return 0;
     }

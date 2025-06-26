@@ -32,25 +32,30 @@ public class CsvGenerator {
                         "CognitiveComplexity",
                         "ParameterCount",
                         "NestingDepth",
+                        "ReturnCount",
+                        "TryCount",
+                        "CatchCount",
+                        "SmellsDensity",
+                        "ManyCatches",
+                        "AssignmentCount",
+                        "InvocationCount",
                         "methodHistories",
                         "Churn",
-                        "Authors",
                         "method_gt_100_loc",
-                        "CodeSmellsCount",      // ← qui
+                        "CodeSmellsCount",
                         "Buggy"
                 )
         )) {
             for (var relEntry : featuresPerMethod.entrySet()) {
                 String version = relEntry.getKey();
                 for (var me : relEntry.getValue().entrySet()) {
-                    String[] parts    = me.getKey().split("#", 2);
-                    String relPath    = parts[0];
-                    String fileName   = Paths.get(relPath).getFileName().toString();
-                    String methodSig  = parts[1];
+                    String[] parts   = me.getKey().split("#", 2);
+                    String relPath   = parts[0];
+                    String fileName  = Paths.get(relPath).getFileName().toString();
+                    String methodSig = parts[1];
 
                     var f = me.getValue();
-                    String buggy = buggyMethods.contains(version + "#" + me.getKey())
-                            ? "Yes" : "No";
+                    String buggy = buggyMethods.contains(version + "#" + me.getKey()) ? "Yes" : "No";
 
                     printer.printRecord(
                             version,
@@ -61,11 +66,17 @@ public class CsvGenerator {
                             f.cognitive,
                             f.parameterCount,
                             f.nestingDepth,
+                            f.returnCount,
+                            f.tryCount,
+                            f.catchCount,
+                            f.smellsDensity,
+                            f.manyCatches,
+                            f.assignmentCount,
+                            f.invocationCount,
                             f.methodHistories,
                             f.churn,
-                            f.authors,
                             f.method_gt_100_loc,
-                            f.codeSmells,          // ← e qui
+                            f.codeSmells,
                             buggy
                     );
                 }
