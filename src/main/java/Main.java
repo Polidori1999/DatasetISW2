@@ -87,7 +87,9 @@ public class Main {
             System.out.println(" → Commit bug-fix: " + bugFixes.size());
 
             // 6) Per ogni tag scarica lo zip, estraine il sorgente, estrai le feature
-            FeatureExtractor fx = new FeatureExtractor(repoDir.toPath());
+            FeatureExtractor fx = new FeatureExtractor(
+                    repoDir.toPath()
+            );
             Map<String, Map<String,FeatureExtractor.MethodFeatures>> allFeat = new LinkedHashMap<>();
 
             for (String tag : validTags) {

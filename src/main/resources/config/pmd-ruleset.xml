@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="BookkeeperRuleset"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0
+                             http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>Regole di code-smell per BookKeeper</description>
+
+    <!-- Esempi di regole: aggiungi quelle che ti servono -->
+    <rule ref="category/java/design.xml/ExcessiveClassLength"/>
+    <rule ref="category/java/design.xml/ExcessiveMethodLength"/>
+    <rule ref="category/java/errorprone.xml/AvoidPrintStackTrace"/>
+    <!-- … -->
+</ruleset>

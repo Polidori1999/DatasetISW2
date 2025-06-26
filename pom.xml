@@ -35,6 +35,7 @@
         </dependency>
 
 
+
         <!-- Jakarta JSON-B API -->
         <dependency>
             <groupId>jakarta.json.bind</groupId>

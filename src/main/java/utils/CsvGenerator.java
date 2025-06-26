@@ -30,13 +30,13 @@ public class CsvGenerator {
                         "LOC",
                         "CyclomaticComplexity",
                         "CognitiveComplexity",
-                        "ParameterCount",        // updated header
+                        "ParameterCount",
                         "NestingDepth",
-                        "CodeSmellsCount",
                         "methodHistories",
                         "Churn",
                         "Authors",
                         "method_gt_100_loc",
+                        "CodeSmellsCount",      // ← qui
                         "Buggy"
                 )
         )) {
@@ -59,13 +59,13 @@ public class CsvGenerator {
                             f.loc,
                             f.cyclomatic,
                             f.cognitive,
-                            f.parameterCount,     // print parameterCount
+                            f.parameterCount,
                             f.nestingDepth,
-                            f.codeSmells,
                             f.methodHistories,
                             f.churn,
                             f.authors,
                             f.method_gt_100_loc,
+                            f.codeSmells,          // ← e qui
                             buggy
                     );
                 }
