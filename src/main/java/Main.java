@@ -1,5 +1,4 @@
 
-
 import fetcher.BookkeeperFetcher;
 import fetcher.model.JiraTicket;
 import fetcher.model.JiraVersion;
@@ -36,9 +35,9 @@ public class Main {
     private static final String REPO             = "bookkeeper";
     private static final String REMOTE_URI       = "https://github.com/" + OWNER + "/" + REPO + ".git";
     private static final String DEFAULT_REPO_DIR = "/home/leonardo/uni/isw2/" + REPO;
-    private static final String churnCacheFile = "churn_cache.json";
-    private static final OkHttpClient client = new OkHttpClient();
-    private static final Gson        gson   = new Gson();
+    private static final String churnCacheFile   = "churn_cache.json";
+    private static final OkHttpClient client     = new OkHttpClient();
+    private static final Gson        gson       = new Gson();
 
     public static void main(String[] args) {
         try {
@@ -119,24 +118,21 @@ public class Main {
                     .collect(Collectors.toSet());
             System.out.println(" → Metodi unici identificati come buggy: " + buggyMethods.size());
 
-            // 8) Calcola methodHistories e churn (con cache su file)
+            // --- 8) Calcola methodHistories e churn (con cache su file)
             System.out.println("inizio calcolo churn");
             Map<String,Integer> histories = extractor.calculateMethodHistories(bugFixes);
 
-// churn: o lo leggo dal file, o lo calcolo e salvo
             Map<String,Integer> churn;
             File cache = new File(churnCacheFile);
             if (cache.exists() && cache.length() > 0) {
-                // legge la mappa da JSON
-                System.out.println("file churn gia presente, leggo da file");
+                System.out.println("file churn già presente, leggo da file");
                 try (Reader r = new FileReader(cache)) {
                     java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<Map<String,Integer>>(){}.getType();
                     churn = gson.fromJson(r, type);
                     System.out.println("→ Caricato churn da cache: " + churn.size() + " metodi");
                 }
             } else {
-                // lo calcolo e salvo
-                System.out.println("file churn non presente");
+                System.out.println("file churn non presente, lo calcolo e salvo");
                 churn = extractor.calculateMethodChurn(bugFixes);
                 try (Writer w = new FileWriter(cache)) {
                     gson.toJson(churn, w);
@@ -154,7 +150,7 @@ public class Main {
                 }
             }
 
-            // --- 9) Applica regola del 33% sulle release (dopo etichettatura)
+            // --- 9) Applica regola del 33% sulle release
             int keepCount = Math.max(1, (int)Math.floor(validTags.size() * 0.33));
             List<String> keptTags = validTags.subList(0, keepCount);
             System.out.println(" → Release mantenute (33% più vecchie): " + keptTags);
@@ -166,11 +162,11 @@ public class Main {
             new CsvGenerator().generateCsv(filteredFeat, buggyMethods, rawCsv);
             System.out.println("✓ CSV grezzo creato: " + rawCsv);
 
-            // --- 11) Preprocessing: rimuovo duplicate
-            Path rawPath   = Paths.get(rawCsv);
-            Path cleanPath = Paths.get("bookkeeper_dataset_clean.csv");
-            CsvPreprocessor.removeDuplicateRows(rawPath, cleanPath);
-            System.out.println("→ Righe duplicate rimosse → " + cleanPath);
+            // --- 11) Preprocessing: rimuovo duplicate (tenendo la riga con Version più vecchia)
+            Path raw     = Paths.get("bookkeeper_dataset_raw.csv");
+            Path cleaned = Paths.get("bookkeeper_dataset_final.csv");
+            CsvPreprocessor.removeDuplicateRows(raw, cleaned);
+            System.out.println("→ Righe duplicate (su tutte le colonne tranne Version) raggruppate → " + cleaned);
 
             git.close();
         } catch (Exception e) {
@@ -178,28 +174,18 @@ public class Main {
         }
     }
 
-
-    // ————— Cammina l’albero dei sorgenti e filtra test/generated/etc. —————
+    // ————— Cammina l’albero dei sorgenti (solo filtri leggeri) —————
     private static Map<String, FeatureExtractor.MethodFeatures> walkAndExtract(File dir, FeatureExtractor fx) throws IOException {
         Map<String, FeatureExtractor.MethodFeatures> m = new HashMap<>();
-
-        String[] excludes = {
-                "/test/", "/generated/", "/target/",
-                "/common/", "/utils/", "/examples/",
-                "/api/", "/internal/", "/dto/",
-                "/model/", "/config/", "/resources/"
-        };
 
         Files.walk(dir.toPath())
                 .filter(p -> p.toString().endsWith(".java"))
                 .filter(p -> p.toString().contains("/src/main/java/"))
                 .filter(p -> {
                     String path = p.toString().replace('\\','/');
-                    // escludi cartelle e test
+                    // escludi solo i test e il codice generato
                     if (path.endsWith("Test.java")) return false;
-                    for (String ex : excludes) {
-                        if (path.contains(ex)) return false;
-                    }
+                    if (path.contains("/generated/")) return false;
                     return true;
                 })
                 .forEach(p -> {
@@ -209,6 +195,7 @@ public class Main {
                         System.err.println("Parse " + p + ": " + e.getMessage());
                     }
                 });
+
         return m;
     }
 
